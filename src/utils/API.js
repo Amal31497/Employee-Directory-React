@@ -1,7 +1,9 @@
 import axios from 'axios';
 
-export default function findPeople(amount){
+export default {
+    findPeople: function(amount){
     return axios.get(
-        `https://randomuser.me/api/?results=${amount}?inc=name,email,location,picture,nat=us`
+        `https://randomuser.me/api/?results=${amount}&nat=us&inc=name,email,location,picture`
     )
+    }
 }

@@ -1,10 +1,22 @@
-import react from 'react';
-import { DropdownButton, Dropdown } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { DropdownButton, Dropdown, Container, Row } from 'react-bootstrap';
 import './App.css';
-import EmployeeCard from './components/EmployeeCard/index' 
-
+import EmployeeCard from './components/EmployeeCard'
+import API from './utils/API'
 
 function App() {
+
+  const [employees, setEmployees] = useState([])
+
+  useEffect(() => {
+    API.findPeople(2)
+      .then(res => {
+        setEmployees(res.data.results);
+        // console.log(res.data.results);
+      })
+      .catch(err => console.log(err))
+  }, [])
+
   return (
     <div className="App">
       <nav className="navbar navbar-light bg-light">
@@ -25,9 +37,19 @@ function App() {
           <Dropdown.Item href="#/action-2">Utah</Dropdown.Item>
         </DropdownButton>
       </div>
-      <div className="jumbotron"> 
-        <EmployeeCard />
-      </div>
+      <Container>
+        <Row>
+          {employees.map((employee, index) => (
+            <EmployeeCard
+              picture={employee.picture.large}
+              firstName={employee.name.first}
+              lastName={employee.name.last}
+              location={employee.location.state}
+              email={employee.email}
+            />
+          ))}
+        </Row>
+      </Container>
     </div>
   );
 }
