@@ -16,4 +16,8 @@
   color: white;
 }
 
-
+.container{
+  margin-top:5rem;;
+  display:inline-flex;
+  justify-content: space-evenly;
+}

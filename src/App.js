@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DropdownButton, Dropdown, Container, Row } from 'react-bootstrap';
+import { DropdownButton, Dropdown, Jumbotron, ListGroup, ListGroupItem } from 'react-bootstrap';
 import './App.css';
 import EmployeeCard from './components/EmployeeCard'
 import API from './utils/API'
@@ -9,7 +9,7 @@ function App() {
   const [employees, setEmployees] = useState([])
 
   useEffect(() => {
-    API.findPeople(2)
+    API.findPeople(10)
       .then(res => {
         setEmployees(res.data.results);
         // console.log(res.data.results);
@@ -37,19 +37,23 @@ function App() {
           <Dropdown.Item href="#/action-2">Utah</Dropdown.Item>
         </DropdownButton>
       </div>
-      <Container>
-        <Row>
+      <Jumbotron className="container">
+        <ListGroup variant="flush">
           {employees.map((employee, index) => (
-            <EmployeeCard
-              picture={employee.picture.large}
-              firstName={employee.name.first}
-              lastName={employee.name.last}
-              location={employee.location.state}
-              email={employee.email}
-            />
+            <ListGroupItem>
+              <EmployeeCard
+                id={employee.id}
+                picture={employee.picture.large}
+                firstName={employee.name.first}
+                lastName={employee.name.last}
+                location={employee.location.state}
+                email={employee.email}
+              />
+            </ListGroupItem>
+
           ))}
-        </Row>
-      </Container>
+        </ListGroup>
+      </Jumbotron>
     </div>
   );
 }
