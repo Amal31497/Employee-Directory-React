@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DropdownButton, Dropdown, Jumbotron, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { DropdownButton, Dropdown, Jumbotron, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import './App.css';
 import EmployeeCard from './components/EmployeeCard'
 import API from './utils/API'
@@ -7,15 +7,32 @@ import API from './utils/API'
 function App() {
 
   const [employees, setEmployees] = useState([])
-
+  const [emp, setEmp] = useState([])
   useEffect(() => {
     API.findPeople(10)
       .then(res => {
+        setEmp(res.data.results)
         setEmployees(res.data.results);
-        // console.log(res.data.results);
       })
       .catch(err => console.log(err))
+
+    
   }, [])
+  
+  const sortByName = (option) => {
+    if(option === "Ascending"){
+      setEmployees([...employees.sort((e1,e2) => e1.name.first.localeCompare(e2.name.first)) ])
+    } else if (option === "Descending"){
+      setEmployees([...employees.sort((e1,e2) => e2.name.first.localeCompare(e1.name.first)) ])
+    }
+  }
+
+  const filterByState = (option) => {
+    setEmployees([...employees.filter((employee) =>  employee.location.state === option)])
+  }
+  const reset = () => {
+    setEmployees(emp)
+  }
 
   return (
     <div className="App">
@@ -26,15 +43,19 @@ function App() {
       </nav>
       <div className="filter">
         <DropdownButton id="dropdown-basic-button" title="Sort By Name">
-          <Dropdown.Item href="#/action-1">Ascending</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">Descending</Dropdown.Item>
+          <Dropdown.Item href="#/action-1" onClick={() => sortByName("Ascending")}>Ascending</Dropdown.Item>
+          <Dropdown.Item href="#/action-2" onClick={() => sortByName("Descending")}>Descending</Dropdown.Item>
         </DropdownButton>
+        <Button onClick={() => reset()}>Reset</Button>
         <DropdownButton id="dropdown-basic-button" title="Filter by Location">
-          <Dropdown.Item href="#/action-1">Washington</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">California</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">Texas</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">Oregon</Dropdown.Item>
-          <Dropdown.Item href="#/action-2">Utah</Dropdown.Item>
+          {employees.map((employee) => (
+            <Dropdown.Item href="#/action-1" onClick={() => filterByState(employee.location.state)}>{employee.location.state}</Dropdown.Item>
+          ))}
+          {/* <Dropdown.Item href="#/action-1" onClick={() => filterByState("Washington")}>Washington</Dropdown.Item>
+          <Dropdown.Item href="#/action-2" onClick={() => filterByState("California")}>California</Dropdown.Item>
+          <Dropdown.Item href="#/action-2" onClick={() => filterByState("Texas")}>Texas</Dropdown.Item>
+          <Dropdown.Item href="#/action-2" onClick={() => filterByState("Oregon")}>Oregon</Dropdown.Item>
+          <Dropdown.Item href="#/action-2" onClick={() => filterByState("Utah")}>Utah</Dropdown.Item> */}
         </DropdownButton>
       </div>
       <Jumbotron className="container">
