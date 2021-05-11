@@ -8,6 +8,7 @@ function App() {
 
   const [employees, setEmployees] = useState([])
   const [emp, setEmp] = useState([])
+  const [states, setStates] = useState([])
   useEffect(() => {
     API.findPeople(10)
       .then(res => {
@@ -15,8 +16,6 @@ function App() {
         setEmployees(res.data.results);
       })
       .catch(err => console.log(err))
-
-    
   }, [])
   
   const sortByName = (option) => {
@@ -31,8 +30,16 @@ function App() {
     setEmployees([...employees.filter((employee) =>  employee.location.state === option)])
   }
   const reset = () => {
+    setEmp(emp)
     setEmployees(emp)
   }
+
+  employees.forEach(employee => {
+    var state = employee.location.state
+    if (!states.includes(state)) {
+      states.push(state)
+    }
+  })
 
   return (
     <div className="App">
@@ -48,14 +55,9 @@ function App() {
         </DropdownButton>
         <Button onClick={() => reset()}>Reset</Button>
         <DropdownButton id="dropdown-basic-button" title="Filter by Location">
-          {employees.map((employee) => (
-            <Dropdown.Item href="#/action-1" onClick={() => filterByState(employee.location.state)}>{employee.location.state}</Dropdown.Item>
+          {states.map((state) => (
+            <Dropdown.Item href="#/action-1" onClick={() => filterByState(state)}>{state}</Dropdown.Item>
           ))}
-          {/* <Dropdown.Item href="#/action-1" onClick={() => filterByState("Washington")}>Washington</Dropdown.Item>
-          <Dropdown.Item href="#/action-2" onClick={() => filterByState("California")}>California</Dropdown.Item>
-          <Dropdown.Item href="#/action-2" onClick={() => filterByState("Texas")}>Texas</Dropdown.Item>
-          <Dropdown.Item href="#/action-2" onClick={() => filterByState("Oregon")}>Oregon</Dropdown.Item>
-          <Dropdown.Item href="#/action-2" onClick={() => filterByState("Utah")}>Utah</Dropdown.Item> */}
         </DropdownButton>
       </div>
       <Jumbotron className="container">
@@ -71,7 +73,6 @@ function App() {
                 email={employee.email}
               />
             </ListGroupItem>
-
           ))}
         </ListGroup>
       </Jumbotron>
