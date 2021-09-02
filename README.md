@@ -2,7 +2,7 @@
 
 
   <br>
-  This application allows user to view a list of employees with basic unsensitive informationa and links. User can sort and filter users 
+  This application allows user to view a list of employees with basic unsensitive informationa and links. User can sort and filter users. All data is taken from      random user third party API. 
 
   <br>
 
